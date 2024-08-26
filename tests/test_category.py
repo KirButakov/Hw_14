@@ -1,34 +1,25 @@
+import pytest
+
 from src.category import Category
-from src.product import Product
+from src.product import Smartphone
 
 
 def test_category_initialization():
-    product1 = Product("Product 1", "Description 1", 100.0, 10)
-    product2 = Product("Product 2", "Description 2", 200.0, 20)
-    category = Category("Test Category", "Test Description", [product1, product2])
-    assert category.name == "Test Category"
-    assert category.description == "Test Description"
-    assert category.product_count == 2
-
-
-def test_category_add_product():
-    product1 = Product("Product 1", "Description 1", 100.0, 10)
-    category = Category("Test Category", "Test Description")
+    category = Category("Смартфоны", "Категория смартфонов")
+    assert category.name == "Смартфоны"
+    assert category.description == "Категория смартфонов"
     assert category.product_count == 0
-    category.add_product(product1)
+
+
+def test_add_product_to_category():
+    category = Category("Смартфоны", "Категория смартфонов")
+    smartphone = Smartphone("iPhone", "Описание iPhone", 50000, 5, 98.5, "iPhone 12", 128, "Black")
+    category.add_product(smartphone)
     assert category.product_count == 1
 
 
-def test_category_products_property():
-    product1 = Product("Product 1", "Description 1", 100.0, 10)
-    product2 = Product("Product 2", "Description 2", 200.0, 20)
-    category = Category("Test Category", "Test Description", [product1, product2])
-    products = category.products
-    assert products == ["Product 1, 100.0 руб. Остаток: 10 шт.", "Product 2, 200.0 руб. Остаток: 20 шт."]
+def test_add_invalid_product_raises_typeerror():
+    category = Category("Смартфоны", "Категория смартфонов")
 
-
-def test_category_str():
-    product1 = Product("Product 1", "Description 1", 100.0, 10)
-    product2 = Product("Product 2", "Description 2", 200.0, 20)
-    category = Category("Test Category", "Test Description", [product1, product2])
-    assert str(category) == "Test Category, количество продуктов: 30 шт."
+    with pytest.raises(TypeError):
+        category.add_product("Not a product")

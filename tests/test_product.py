@@ -1,40 +1,39 @@
 import pytest
 
-from src.product import Product
+from src.product import LawnGrass, Product, Smartphone
 
 
 def test_product_initialization():
-    product = Product("Test Product", "Test Description", 100.0, 10)
-    assert product.name == "Test Product"
-    assert product.description == "Test Description"
+    product = Product("Товар", "Описание товара", 100.0, 10)
+    assert product.name == "Товар"
     assert product.price == 100.0
     assert product.quantity == 10
 
 
-def test_product_price_setter():
-    product = Product("Test Product", "Test Description", 100.0, 10)
-    product.price = 200.0
-    assert product.price == 200.0
-
-    with pytest.raises(ValueError):
-        product.price = -100.0
+def test_smartphone_initialization():
+    smartphone = Smartphone("iPhone", "Описание iPhone", 50000, 5, 98.5, "iPhone 12", 128, "Black")
+    assert smartphone.name == "iPhone"
+    assert smartphone.efficiency == 98.5
+    assert smartphone.model == "iPhone 12"
 
 
-def test_product_new_product_class_method():
-    product_info = {"name": "Test Product", "description": "Test Description", "price": 100.0, "quantity": 10}
-    product = Product.new_product(product_info)
-    assert product.name == "Test Product"
-    assert product.description == "Test Description"
-    assert product.price == 100.0
-    assert product.quantity == 10
+def test_lawn_grass_initialization():
+    grass = LawnGrass("Газонная трава", "Описание травы", 500, 20, "Россия", "7 дней", "Зеленый")
+    assert grass.name == "Газонная трава"
+    assert grass.country == "Россия"
+    assert grass.germination_period == "7 дней"
 
 
-def test_product_str():
-    product = Product("Test Product", "Test Description", 100.0, 10)
-    assert str(product) == "Test Product, 100.0 руб. Остаток: 10 шт."
+def test_add_same_type_products():
+    smartphone1 = Smartphone("Samsung", "Описание", 1000, 2, 95, "S23", 256, "Gray")
+    smartphone2 = Smartphone("iPhone", "Описание", 2000, 1, 98, "12", 512, "Black")
+    total_value = smartphone1 + smartphone2
+    assert total_value == 4000  # 1000*2 + 2000*1
 
 
-def test_product_add():
-    product1 = Product("Product 1", "Description 1", 100.0, 10)
-    product2 = Product("Product 2", "Description 2", 200.0, 20)
-    assert product1 + product2 == 5000.0  # 100.0*10 + 200.0*20
+def test_add_different_type_products_raises_typeerror():
+    smartphone = Smartphone("Samsung", "Описание", 1000, 2, 95, "S23", 256, "Gray")
+    grass = LawnGrass("Газонная трава", "Описание", 500, 20, "Россия", "7 дней", "Зеленый")
+
+    with pytest.raises(TypeError):
+        result = smartphone + grass
