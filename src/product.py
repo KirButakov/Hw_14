@@ -1,9 +1,32 @@
-class Product:
+from abc import ABC, abstractmethod
+
+
+# Абстрактный класс
+class BaseProduct(ABC):
+    @abstractmethod
+    def get_info(self):
+        pass
+
+    @abstractmethod
+    def get_price(self):
+        pass
+
+
+# Миксин для логирования
+class LogMixin:
+    def __init__(self, *args, **kwargs):
+        class_name = self.__class__.__name__
+        print(f"Создан объект класса {class_name} с параметрами: {args}, {kwargs}")
+
+
+# Класс Product
+class Product(LogMixin, BaseProduct):
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
         self._price = price
         self.quantity = quantity
+        super().__init__(name, description, price, quantity)
 
     @property
     def price(self):
@@ -23,11 +46,18 @@ class Product:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        if type(self) == type(other):
+        if isinstance(other, self.__class__):
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Нельзя сложить продукты разных типов")
 
+    def get_info(self):
+        return f"{self.name}: {self.description}"
 
+    def get_price(self):
+        return self._price
+
+
+# Подкласс Smartphone
 class Smartphone(Product):
     def __init__(self, name, description, price, quantity, efficiency, model, memory, color):
         super().__init__(name, description, price, quantity)
@@ -37,6 +67,7 @@ class Smartphone(Product):
         self.color = color
 
 
+# Подкласс LawnGrass
 class LawnGrass(Product):
     def __init__(self, name, description, price, quantity, country, germination_period, color):
         super().__init__(name, description, price, quantity)
