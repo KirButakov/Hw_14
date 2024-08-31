@@ -14,9 +14,9 @@ class BaseProduct(ABC):
 
 # Миксин для логирования
 class LogMixin:
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         class_name = self.__class__.__name__
-        print(f"Создан объект класса {class_name} с параметрами: {args}, {kwargs}")
+        print(f"Создан объект класса {class_name} с параметрами: {self.__dict__}")
 
 
 # Класс Product
@@ -26,7 +26,7 @@ class Product(LogMixin, BaseProduct):
         self.description = description
         self._price = price
         self.quantity = quantity
-        super().__init__(name, description, price, quantity)
+        super().__init__()  # Вызов конструктора LogMixin без аргументов
 
     @property
     def price(self):
@@ -46,7 +46,7 @@ class Product(LogMixin, BaseProduct):
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        if isinstance(other, self.__class__):
+        if isinstance(other, Product):
             return self.price * self.quantity + other.price * other.quantity
         raise TypeError("Нельзя сложить продукты разных типов")
 
@@ -66,6 +66,9 @@ class Smartphone(Product):
         self.memory = memory
         self.color = color
 
+    def get_info(self):
+        return f"{self.name} - {self.model}: {self.description}"
+
 
 # Подкласс LawnGrass
 class LawnGrass(Product):
@@ -74,3 +77,6 @@ class LawnGrass(Product):
         self.country = country
         self.germination_period = germination_period
         self.color = color
+
+    def get_info(self):
+        return f"{self.name} ({self.color}) - {self.description}"

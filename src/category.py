@@ -33,3 +33,11 @@ class Category:
     def __str__(self):
         total_quantity = sum(product.quantity for product in self._products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    @classmethod
+    def get_category_count(cls):
+        return cls.category_count
+
+    @classmethod
+    def get_total_product_count(cls):
+        return cls.total_product_count
